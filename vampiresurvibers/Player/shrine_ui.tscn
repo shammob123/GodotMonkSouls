@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bl50c6caqmu5q"]
+
+[sub_resource type="GDScript" id="GDScript_tmhex"]
+script/source = "extends Control
+
+# A reference to our TextureRect node.
+@onready var icon_texture: TextureRect = $TextureRect
+func update_display(shrine_scene: PackedScene):
+	if not shrine_scene:
+		return
+	
+	var temp_instance = shrine_scene.instantiate()
+	icon_texture.texture = temp_instance.icon
+	temp_instance.queue_free()
+"
+
+[node name="ShrineUI" type="Control"]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+script = SubResource("GDScript_tmhex")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://caspwuqxr5q0x"]
+
+[ext_resource type="PackedScene" uid="uid://ddbjuq6kje4v" path="res://Player/Player.tscn" id="1_glv2v"]
+[ext_resource type="Texture2D" uid="uid://dqgduprvr8qjn" path="res://Assets/testBackground.png" id="2_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://beri161yjm33s" path="res://Enemies/golemBoss.tscn" id="3_r0du0"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_glv2v")]
+z_index = 1
+position = Vector2(50, 50)
+shrine_scenes = Array[PackedScene]([])
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_uu6xs")
+
+[node name="GolemBoss" parent="." instance=ExtResource("3_r0du0")]
+position = Vector2(-193, -172)
+scale = Vector2(2, 2)

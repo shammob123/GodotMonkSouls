@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://ep7q2e535g8d"]
+
+[ext_resource type="Script" uid="uid://bxr34ik8untx6" path="res://Shrines/expansion_shrine.gd" id="1_f1hw6"]
+[ext_resource type="Texture2D" uid="uid://csseb0ynubavv" path="res://Assets/expansionShrine.png" id="2_f1hw6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n2er8"]
+size = Vector2(22, 22)
+
+[node name="ExpansionShrine" type="Node2D"]
+script = ExtResource("1_f1hw6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_f1hw6")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_n2er8")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
