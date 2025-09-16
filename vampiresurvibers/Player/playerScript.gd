@@ -9,14 +9,19 @@ extends CharacterBody2D
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var fire_rate_timer = $FireCooldown
 @onready var swap_cooldown_timer = $SwapCooldown
+@onready var dodge_cooldown_timer = $DodgeCooldown
 @onready var shrine_label = $ShrineLabel
 @onready var cast_timer = Timer.new()
+@onready var dodge_timer = Timer.new()
+
 
 ## == Exported ==
 @export var acceleration := 25.0
 @export var friction := 25
 @export var max_speed := 200.0
 @export var speed_multiplier := 10.0
+@export var dodge_speed := 300.0
+@export var dodge_duration := .75 # Seconds
 
 ## == Constants == 
 const ProjectileScene = preload("res://Player/playerProjectile.tscn")
@@ -30,7 +35,11 @@ var current_shrine_index: int = 0
 var state = PlayerState.NORMAL
 var input_vector := Vector2.ZERO
 var can_fire = true
-var facing_direction = 1
+var facing_direction_vertical = 1
+var facing_direction_horizontal = 1
+var dodge_direction = Vector2.DOWN
+var get_dodge_direction = false
+var can_dodge = true
 
 enum PlayerState {
 	NORMAL,
@@ -44,6 +53,10 @@ func _ready():
 	cast_timer.one_shot = true
 	cast_timer.timeout.connect(_on_cast_timer_timeout)
 	
+	add_child(dodge_timer)
+	dodge_timer.one_shot = true
+	dodge_timer.timeout.connect(_on_dodge_timer_timeout)
+	
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
 	
@@ -51,9 +64,14 @@ func _physics_process(delta: float) -> void:
 		PlayerState.NORMAL:					
 			if Input.is_action_pressed("Spellcast"):
 				start_casting()
+				
+			if Input.is_action_pressed("DodgeRoll") and can_dodge:
+				start_dodging()
 			
 		PlayerState.CASTING:
 			pass
+		
+		
 		
 	if Input.is_action_pressed("SwapShrine") and can_swap_shrine:
 		swapShrine()
@@ -126,19 +144,35 @@ func update_animation():
 		return
 
 	if velocity.x > 0:
-		facing_direction = 1
+		facing_direction_horizontal = 1
 	elif velocity.x < 0:
-		facing_direction = -1
+		facing_direction_horizontal = -1
+		
+	if velocity.y > 0:
+		facing_direction_vertical = 1
+	elif velocity.y < 0:
+		facing_direction_vertical = -1
 
 	var anim_name = ""
 
 	if velocity.length() > 10:
-		if (facing_direction == 1):
-			anim_name = "RunRight"
-		else:
-			anim_name = "RunLeft"
+		match facing_direction_horizontal:
+			-1:
+				match facing_direction_vertical:
+					-1:
+						anim_name = "RunTopLeft"
+					1:
+						anim_name = "RunBottomLeft"
+						
+			1:
+				match facing_direction_vertical:
+					-1:
+						anim_name = "RunTopRight"
+					1:
+						anim_name = "RunBottomRight"
+
 	else:
-		if (facing_direction == 1):
+		if (facing_direction_horizontal == 1):
 			anim_name = "IdleRight"
 		else:
 			anim_name = "IdleLeft"
@@ -160,6 +194,18 @@ func handle_movement(delta: float):
 		# No input, just apply friction
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta * speed_multiplier)
 		return
+		
+	if state == PlayerState.DODGING:
+		if(get_dodge_direction):
+			dodge_direction = Vector2(
+			Input.get_action_strength("Move Right") - Input.get_action_strength("Move Left"),
+			Input.get_action_strength("Move Down") - Input.get_action_strength("Move Up")
+			).normalized()
+			get_dodge_direction = false
+		
+		velocity = dodge_direction * dodge_speed
+		return
+		
 
 	input_vector = Vector2(
 		Input.get_action_strength("Move Right") - Input.get_action_strength("Move Left"),
@@ -185,6 +231,27 @@ func _on_cast_timer_timeout():
 	can_fire = true
 	fireShrine()
 	
+
+## == Dodge Login ==
+func start_dodging():
+	state = PlayerState.DODGING
+	can_fire = false
+	if velocity.x >= 0:
+		play_animation_with_duration("DodgeRollRight", dodge_duration)
+	elif velocity.x < 0:
+		play_animation_with_duration("DodgeRollLeft", dodge_duration)
+	
+	dodge_timer.start(dodge_duration)
+	get_dodge_direction = true
+	can_dodge = false
+	dodge_cooldown_timer.start()
+	
+	
+func _on_dodge_timer_timeout():
+	state = PlayerState.NORMAL
+	can_fire = true
+	velocity = velocity/2 # Kill Player momentum after dodge finishes. Setting to 0 is jarring
+	
 func swapShrine():
 	current_shrine_index += 1
 	if current_shrine_index > 2:
@@ -202,3 +269,7 @@ func swapShrine():
 
 func _on_swap_cooldown_timeout() -> void:
 	can_swap_shrine = true
+
+
+func _on_dodge_cooldown_timeout() -> void:
+	can_dodge = true

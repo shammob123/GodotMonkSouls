@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1p42dt6x11py"
-path="res://.godot/imported/CW-Run-Left.png-2440d0e65ffa4feb55e691fd7133039e.ctex"
+uid="uid://c1dp1ud40046h"
+path="res://.godot/imported/CW-Run-Right.png-2e8f19956841396591cb80e017ecb7a4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CW-Run-Left.png"
-dest_files=["res://.godot/imported/CW-Run-Left.png-2440d0e65ffa4feb55e691fd7133039e.ctex"]
+source_file="res://Assets/CowboyWizard/CW-Run-Right.png"
+dest_files=["res://.godot/imported/CW-Run-Right.png-2e8f19956841396591cb80e017ecb7a4.ctex"]
 
 [params]
 

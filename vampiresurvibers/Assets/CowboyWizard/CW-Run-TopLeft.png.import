@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7jyoe137mmb6"
-path="res://.godot/imported/CowboyWizard.png-40cd61b6b8c736be057a598e1271f4c3.ctex"
+uid="uid://bul1epqs6ty3l"
+path="res://.godot/imported/CW-Run-TopLeft.png-94301c41c118b5e3c7b9051232af37a4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CowboyWizard.png"
-dest_files=["res://.godot/imported/CowboyWizard.png-40cd61b6b8c736be057a598e1271f4c3.ctex"]
+source_file="res://Assets/CowboyWizard/CW-Run-TopLeft.png"
+dest_files=["res://.godot/imported/CW-Run-TopLeft.png-94301c41c118b5e3c7b9051232af37a4.ctex"]
 
 [params]
 

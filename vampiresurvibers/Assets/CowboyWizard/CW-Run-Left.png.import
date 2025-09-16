@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfdp64xswe5ls"
-path="res://.godot/imported/CW-Spellcast-Right.png-afa1dd615c0c4af8890cece1c1d4688a.ctex"
+uid="uid://1p42dt6x11py"
+path="res://.godot/imported/CW-Run-Left.png-13f4f86264f963d674555e498d929077.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CW-Spellcast-Right.png"
-dest_files=["res://.godot/imported/CW-Spellcast-Right.png-afa1dd615c0c4af8890cece1c1d4688a.ctex"]
+source_file="res://Assets/CowboyWizard/CW-Run-Left.png"
+dest_files=["res://.godot/imported/CW-Run-Left.png-13f4f86264f963d674555e498d929077.ctex"]
 
 [params]
 
