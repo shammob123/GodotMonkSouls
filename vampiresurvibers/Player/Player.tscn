@@ -1,7 +1,9 @@
-[gd_scene load_steps=121 format=3 uid="uid://ddbjuq6kje4v"]
+[gd_scene load_steps=130 format=3 uid="uid://ddbjuq6kje4v"]
 
 [ext_resource type="Script" uid="uid://rbk7vxnpn2vu" path="res://Player/playerScript.gd" id="1_q3lat"]
+[ext_resource type="Script" uid="uid://cs7xaiauydde0" path="res://Player/camera_2d.gd" id="2_dm7nj"]
 [ext_resource type="Texture2D" uid="uid://ct3s2rqwyy2l" path="res://Assets/CowboyWizard/CW-DodgeRoll-Left.png" id="3_5wa8t"]
+[ext_resource type="Shader" uid="uid://tyth67c55r2" path="res://Player/PlayerShader.gdshader" id="4_3mea3"]
 [ext_resource type="Texture2D" uid="uid://dhkl0dil0g4bf" path="res://Assets/CowboyWizard/CW-DodgeRoll-Right.png" id="4_p7tob"]
 [ext_resource type="Texture2D" uid="uid://bhy83ufvgxxto" path="res://Assets/TheFuckener.png" id="6_6ysni"]
 [ext_resource type="Texture2D" uid="uid://biqd4dk0unbyk" path="res://Assets/CowboyWizard/CW-Idle-Left.png" id="6_s1rgi"]
@@ -12,10 +14,19 @@
 [ext_resource type="Texture2D" uid="uid://c1dp1ud40046h" path="res://Assets/CowboyWizard/CW-Run-Right.png" id="9_0j2ni"]
 [ext_resource type="Texture2D" uid="uid://c8q10any1e6h4" path="res://Assets/CowboyWizard/CW-Spellcast-Left.png" id="10_v0k0e"]
 [ext_resource type="Texture2D" uid="uid://dfdp64xswe5ls" path="res://Assets/CowboyWizard/CW-Spellcast-Right.png" id="11_5wa8t"]
+[ext_resource type="Script" uid="uid://cl2jnv30lohdj" path="res://Player/health_bar.gd" id="13_p7tob"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vlldt"]
 radius = 14.0
 height = 58.0
+
+[sub_resource type="Gradient" id="Gradient_5wa8t"]
+offsets = PackedFloat32Array(0, 0.14, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0866667, 0.0866667, 0.0866667, 1, 1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7v5gs"]
+shader = ExtResource("4_3mea3")
+shader_parameter/flash_strength = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c5st5"]
 atlas = ExtResource("3_5wa8t")
@@ -812,6 +823,31 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dm7nj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mea3"]
+bg_color = Color(0.941231, 0.401231, 0.40493, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7v5gs"]
+bg_color = Color(0.169245, 0.169245, 0.169245, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+shadow_color = Color(0, 0, 0, 0.27451)
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8sa4y"]
+bg_color = Color(0.942823, 0.942823, 0.942823, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_q3lat")
 acceleration = 100.0
@@ -819,11 +855,14 @@ friction = 50
 max_speed = 1000.0
 
 [node name="PlayerHitbox" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, 5)
 shape = SubResource("CapsuleShape2D_vlldt")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
+script = ExtResource("2_dm7nj")
+shakeFade = 2.0
 
 [node name="WeaponPivot" type="Node2D" parent="."]
 
@@ -834,13 +873,32 @@ texture = ExtResource("6_6ysni")
 [node name="Marker2D" type="Marker2D" parent="WeaponPivot/WeaponSprite"]
 position = Vector2(26, -3)
 
+[node name="WeaponParticles" type="CPUParticles2D" parent="WeaponPivot"]
+z_index = -1
+position = Vector2(16, -3)
+emitting = false
+amount = 16
+lifetime = 0.2
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 25.0
+initial_velocity_max = 50.0
+orbit_velocity_min = -0.01
+orbit_velocity_max = 10.0
+color = Color(0.86611, 0.0917685, 0.180119, 1)
+color_ramp = SubResource("Gradient_5wa8t")
+
 [node name="FireCooldown" type="Timer" parent="."]
 wait_time = 0.025
 one_shot = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_7v5gs")
 sprite_frames = SubResource("SpriteFrames_7v5gs")
-animation = &"DodgeRollRight"
+animation = &"IdleRight"
 autoplay = "RunBottomRight"
 
 [node name="ShrineLabel" type="Label" parent="."]
@@ -857,6 +915,45 @@ one_shot = true
 wait_time = 2.0
 one_shot = true
 
+[node name="PlayerUI" type="CanvasLayer" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="PlayerUI"]
+z_index = 4
+offset_left = 17.0
+offset_top = 15.0
+offset_right = 322.0
+offset_bottom = 46.0
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxEmpty_dm7nj")
+theme_override_styles/fill = SubResource("StyleBoxFlat_3mea3")
+value = 60.0
+show_percentage = false
+script = ExtResource("13_p7tob")
+
+[node name="DamageBar" type="ProgressBar" parent="PlayerUI/HealthBar"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_7v5gs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8sa4y")
+value = 80.0
+show_percentage = false
+
+[node name="DamageDelayTimer" type="Timer" parent="PlayerUI/HealthBar"]
+wait_time = 0.4
+one_shot = true
+
+[node name="IFrameTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="health_changed" from="." to="PlayerUI/HealthBar" method="_on_player_health_changed"]
 [connection signal="timeout" from="FireCooldown" to="." method="_on_fire_cooldown_timeout"]
 [connection signal="timeout" from="SwapCooldown" to="." method="_on_swap_cooldown_timeout"]
 [connection signal="timeout" from="DodgeCooldown" to="." method="_on_dodge_cooldown_timeout"]
+[connection signal="timeout" from="PlayerUI/HealthBar/DamageDelayTimer" to="PlayerUI/HealthBar" method="_on_damage_delay_timer_timeout"]
+[connection signal="timeout" from="IFrameTimer" to="." method="_on_i_frame_timer_timeout"]

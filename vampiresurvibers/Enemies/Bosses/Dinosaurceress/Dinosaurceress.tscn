@@ -1,0 +1,65 @@
+[gd_scene load_steps=10 format=3 uid="uid://deqtieoq24w4e"]
+
+[ext_resource type="Script" uid="uid://cnbbr2b45se6s" path="res://Enemies/Bosses/Dinosaurceress/dinosaurceress.gd" id="1_1sy1m"]
+[ext_resource type="Texture2D" uid="uid://d2cx6apj3lmfs" path="res://Assets/Dinosaurceress/Dinosaurceress.png" id="1_lpcoe"]
+[ext_resource type="Script" uid="uid://d36ehuhni01eh" path="res://Scripts/FiniteStateMachine.gd" id="2_jtfva"]
+[ext_resource type="Script" uid="uid://cyltw7pm8velm" path="res://Enemies/Bosses/Dinosaurceress/States/Idle.gd" id="4_1sy1m"]
+[ext_resource type="Script" uid="uid://726sttxgvkp0" path="res://Enemies/Bosses/Dinosaurceress/States/Follow.gd" id="4_rm1mx"]
+[ext_resource type="Script" uid="uid://bfy12sqbakl2j" path="res://Enemies/Bosses/Dinosaurceress/run_attack.gd" id="6_lpcoe"]
+[ext_resource type="Script" uid="uid://duv07lgftn6q6" path="res://Enemies/Bosses/Dinosaurceress/eruption_attack.gd" id="7_2kdg7"]
+[ext_resource type="PackedScene" uid="uid://cu56ywwoqcnao" path="res://Enemies/Bosses/Dinosaurceress/Eruption.tscn" id="8_rm1mx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1sy1m"]
+radius = 192.042
+
+[node name="Dinosaurceress" type="CharacterBody2D"]
+position = Vector2(7, -122)
+script = ExtResource("1_1sy1m")
+
+[node name="FlipAxis" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="FlipAxis"]
+texture = ExtResource("1_lpcoe")
+
+[node name="PlayerDetection" type="Area2D" parent="FlipAxis"]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlipAxis/PlayerDetection"]
+shape = SubResource("CircleShape2D_1sy1m")
+
+[node name="FiniteStateMachine" type="Node2D" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_jtfva")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node2D" parent="FiniteStateMachine"]
+script = ExtResource("4_1sy1m")
+
+[node name="Follow" type="Node2D" parent="FiniteStateMachine"]
+script = ExtResource("4_rm1mx")
+
+[node name="RunAttack" type="Node2D" parent="FiniteStateMachine"]
+script = ExtResource("6_lpcoe")
+
+[node name="EruptionAttack" type="Node2D" parent="FiniteStateMachine"]
+script = ExtResource("7_2kdg7")
+eruption_scene = ExtResource("8_rm1mx")
+
+[node name="debug" type="Label" parent="."]
+offset_left = -24.0
+offset_top = -53.0
+offset_right = 25.0
+offset_bottom = -30.0
+text = "debug"
+metadata/_edit_use_anchors_ = true
+
+[node name="RoarTimer" type="Timer" parent="."]
+wait_time = 1.985
+one_shot = true
+
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[connection signal="body_entered" from="FlipAxis/PlayerDetection" to="FiniteStateMachine/Idle" method="_on_player_detection_body_entered"]
+[connection signal="timeout" from="RoarTimer" to="FiniteStateMachine/Idle" method="_on_roar_timer_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="FiniteStateMachine/Follow" method="_on_attack_cooldown_timeout"]

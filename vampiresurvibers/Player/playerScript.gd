@@ -1,6 +1,9 @@
 #Player.gd
+class_name Player
 
 extends CharacterBody2D
+
+signal health_changed(new_health)
 
 ## == Nodes ==
 @onready var weapon_pivot = $WeaponPivot
@@ -11,9 +14,12 @@ extends CharacterBody2D
 @onready var swap_cooldown_timer = $SwapCooldown
 @onready var dodge_cooldown_timer = $DodgeCooldown
 @onready var shrine_label = $ShrineLabel
+@onready var weapon_particles = $WeaponPivot/WeaponParticles
 @onready var cast_timer = Timer.new()
 @onready var dodge_timer = Timer.new()
-
+@onready var health_bar = $PlayerUI/HealthBar
+@onready var iFrameTimer = $IFrameTimer
+@onready var playerSprite = $AnimatedSprite2D
 
 ## == Exported ==
 @export var acceleration := 25.0
@@ -22,6 +28,7 @@ extends CharacterBody2D
 @export var speed_multiplier := 10.0
 @export var dodge_speed := 300.0
 @export var dodge_duration := .75 # Seconds
+
 
 ## == Constants == 
 const ProjectileScene = preload("res://Player/playerProjectile.tscn")
@@ -40,6 +47,31 @@ var facing_direction_horizontal = 1
 var dodge_direction = Vector2.DOWN
 var get_dodge_direction = false
 var can_dodge = true
+var _health: int = 100: set = set_health
+var iFramesActive = false
+var flash_tween: Tween = null
+
+func set_health(value):
+	if _health == value:
+		return
+	_health = value
+	emit_signal("health_changed", _health)
+	
+func take_damage(value):
+	if iFramesActive:
+		return
+	_health = _health - value
+	startIFrames()
+
+func startIFrames():
+	iFramesActive = true
+	iFrameTimer.start()
+	var tween = create_tween()
+	var mat = playerSprite.material as ShaderMaterial
+	mat.set_shader_parameter("flash_strength", 1.0)
+	tween.tween_property(mat, "shader_parameter/flash_strength", 0.0, 0.2)
+
+
 
 enum PlayerState {
 	NORMAL,
@@ -47,6 +79,8 @@ enum PlayerState {
 	CASTING,
 	STUNNED
 }
+
+
 
 func _ready():
 	add_child(cast_timer)
@@ -56,6 +90,8 @@ func _ready():
 	add_child(dodge_timer)
 	dodge_timer.one_shot = true
 	dodge_timer.timeout.connect(_on_dodge_timer_timeout)
+	
+	health_bar.init_health(_health)
 	
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
@@ -114,6 +150,7 @@ func fire():
 	var direction = Vector2.from_angle(projectile_spawn_point.global_rotation)
 	get_tree().root.add_child(projectile)
 	projectile.start(projectile_spawn_point.global_position, direction)
+	weapon_particles.emitting = true
 
 func fireShrine():
 
@@ -273,3 +310,8 @@ func _on_swap_cooldown_timeout() -> void:
 
 func _on_dodge_cooldown_timeout() -> void:
 	can_dodge = true
+
+
+func _on_i_frame_timer_timeout() -> void:
+	iFramesActive = false
+	

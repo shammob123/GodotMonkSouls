@@ -1,25 +1,35 @@
-[gd_scene load_steps=27 format=3 uid="uid://beri161yjm33s"]
+[gd_scene load_steps=28 format=3 uid="uid://beri161yjm33s"]
 
-[ext_resource type="Script" uid="uid://djrrbg6xxqlvv" path="res://Enemies/golem_boss.gd" id="1_f0p7t"]
+[ext_resource type="Script" uid="uid://djrrbg6xxqlvv" path="res://Enemies/Bosses/Golem Boss/golem_boss.gd" id="1_f0p7t"]
 [ext_resource type="Texture2D" uid="uid://bc0p0nvnqqikb" path="res://Assets/Mecha-stone Golem 0.1/PNG sheet/Character_sheet.png" id="1_gppai"]
 [ext_resource type="Texture2D" uid="uid://c82w6868jo2gq" path="res://Assets/Mecha-stone Golem 0.1/weapon PNG/Laser_sheet.png" id="2_dbvpp"]
-[ext_resource type="Script" uid="uid://d36ehuhni01eh" path="res://FiniteStateMachine.gd" id="3_llt3o"]
-[ext_resource type="Script" uid="uid://dwycowa1ixidc" path="res://Enemies/Idle.gd" id="4_dbvpp"]
-[ext_resource type="Script" uid="uid://726sttxgvkp0" path="res://Enemies/Follow.gd" id="5_llt3o"]
-[ext_resource type="Script" uid="uid://gbgh6hknttnc" path="res://Enemies/MeleeAttack.gd" id="7_5ypub"]
-[ext_resource type="Script" uid="uid://cdonsuqo56teu" path="res://Enemies/LaserBeam.gd" id="8_x2nnx"]
-[ext_resource type="Script" uid="uid://bfam720p7kf3f" path="res://Enemies/ArmorBuff.gd" id="9_2k10w"]
-[ext_resource type="Script" uid="uid://b7db5ncylrg5p" path="res://Enemies/Dash.gd" id="9_3avkl"]
-[ext_resource type="Script" uid="uid://dssbcq3i80oqm" path="res://Enemies/HomingMissile.gd" id="9_pq2da"]
-[ext_resource type="PackedScene" uid="uid://dal780nfpoc03" path="res://Enemies/golem_bullet.tscn" id="10_tvetk"]
-[ext_resource type="Script" uid="uid://3mss2e18kmof" path="res://Enemies/Death.gd" id="11_2k10w"]
+[ext_resource type="Script" uid="uid://d36ehuhni01eh" path="res://Scripts/FiniteStateMachine.gd" id="3_llt3o"]
+[ext_resource type="Script" uid="uid://dwycowa1ixidc" path="res://Enemies/Bosses/Golem Boss/States/Idle.gd" id="4_dbvpp"]
+[ext_resource type="Script" uid="uid://726sttxgvkp0" path="res://Enemies/Bosses/Dinosaurceress/States/Follow.gd" id="5_llt3o"]
+[ext_resource type="Script" uid="uid://gbgh6hknttnc" path="res://Enemies/Bosses/Golem Boss/States/MeleeAttack.gd" id="7_5ypub"]
+[ext_resource type="Script" uid="uid://cdonsuqo56teu" path="res://Enemies/Bosses/Golem Boss/States/LaserBeam.gd" id="8_x2nnx"]
+[ext_resource type="Script" uid="uid://bfam720p7kf3f" path="res://Enemies/Bosses/Golem Boss/States/ArmorBuff.gd" id="9_2k10w"]
+[ext_resource type="Script" uid="uid://b7db5ncylrg5p" path="res://Enemies/Bosses/Golem Boss/States/Dash.gd" id="9_3avkl"]
+[ext_resource type="Script" uid="uid://dssbcq3i80oqm" path="res://Enemies/Bosses/Golem Boss/States/HomingMissile.gd" id="9_pq2da"]
+[ext_resource type="PackedScene" uid="uid://dal780nfpoc03" path="res://Enemies/Bosses/Golem Boss/golem_bullet.tscn" id="10_tvetk"]
+[ext_resource type="Script" uid="uid://3mss2e18kmof" path="res://Enemies/Bosses/Golem Boss/States/Death.gd" id="11_2k10w"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gtcpn"]
+radius = 12.0
+height = 46.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s3nqr"]
+radius = 131.015
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2k10w"]
+size = Vector2(22, 35)
 
 [sub_resource type="Animation" id="Animation_pq2da"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Pivot/Sprite2D:frame")
+tracks/0/path = NodePath("FlipAxis/Pivot/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -31,7 +41,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/path = NodePath("FlipAxis/Sprite2D:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -43,7 +53,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame_coords")
+tracks/2/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -51,6 +61,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [Vector2i(0, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("FlipAxis/AttackHitboxes/Stab:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_vlr06"]
@@ -60,7 +82,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -76,7 +98,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -93,7 +115,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -109,7 +131,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -127,7 +149,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -143,7 +165,7 @@ step = 0.0666667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Pivot/Sprite2D:frame")
+tracks/0/path = NodePath("FlipAxis/Pivot/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -174,7 +196,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -186,13 +208,12 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_1sk1f"]
 resource_name = "melee_attack"
-length = 0.875013
 loop_mode = 1
 step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -200,6 +221,18 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("FlipAxis/AttackHitboxes/Stab:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.76, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
 }
 
 [sub_resource type="Animation" id="Animation_x2nnx"]
@@ -209,7 +242,7 @@ step = 0.125
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/path = NodePath("FlipAxis/Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -233,31 +266,45 @@ _data = {
 &"ranged_attack": SubResource("Animation_x2nnx")
 }
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gtcpn"]
-radius = 12.0
-height = 46.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_s3nqr"]
-radius = 131.015
-
 [node name="GolemBoss" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_f0p7t")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -3)
+shape = SubResource("CapsuleShape2D_gtcpn")
+
+[node name="FlipAxis" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="FlipAxis"]
 texture = ExtResource("1_gppai")
 hframes = 10
 vframes = 10
 frame = 10
 
-[node name="Pivot" type="Node2D" parent="."]
+[node name="Pivot" type="Node2D" parent="FlipAxis"]
 position = Vector2(2, -17)
 
-[node name="Sprite2D" type="Sprite2D" parent="Pivot"]
+[node name="Sprite2D" type="Sprite2D" parent="FlipAxis/Pivot"]
 position = Vector2(98, 17)
 texture = ExtResource("2_dbvpp")
 vframes = 15
+
+[node name="PlayerDetection" type="Area2D" parent="FlipAxis"]
+visible = false
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlipAxis/PlayerDetection"]
+shape = SubResource("CircleShape2D_s3nqr")
+
+[node name="AttackHitboxes" type="Area2D" parent="FlipAxis"]
+
+[node name="Stab" type="CollisionShape2D" parent="FlipAxis/AttackHitboxes"]
+position = Vector2(28, 6.5)
+shape = SubResource("RectangleShape2D_2k10w")
+disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -298,16 +345,6 @@ offset_right = 25.0
 offset_bottom = -30.0
 text = "debug"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -3)
-shape = SubResource("CapsuleShape2D_gtcpn")
-
-[node name="PlayerDetection" type="Area2D" parent="."]
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
-shape = SubResource("CircleShape2D_s3nqr")
-
 [node name="FiniteStateMachine" type="Node2D" parent="."]
 script = ExtResource("3_llt3o")
 
@@ -336,4 +373,5 @@ script = ExtResource("11_2k10w")
 script = ExtResource("9_pq2da")
 bullet_node = ExtResource("10_tvetk")
 
-[connection signal="body_entered" from="PlayerDetection" to="FiniteStateMachine/Idle" method="_on_player_detection_body_entered"]
+[connection signal="body_entered" from="FlipAxis/PlayerDetection" to="FiniteStateMachine/Idle" method="_on_player_detection_body_entered"]
+[connection signal="body_entered" from="FlipAxis/AttackHitboxes" to="." method="_on_attack_hitboxes_body_entered"]

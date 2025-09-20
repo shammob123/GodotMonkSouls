@@ -1,6 +1,6 @@
 extends State
 
-@onready var pivot =  $"../../Pivot"
+@onready var pivot =  $"../../FlipAxis/Pivot"
 var can_transition: bool = false
 
 func enter():

@@ -27,9 +27,7 @@ func _on_area_2d_area_entered(area):
 		var front_face_normal = self.global_transform.basis_xform(Vector2.RIGHT).normalized()
 		
 		var incoming_velocity = area.velocity
-		
-		var dot_product = incoming_velocity.dot(front_face_normal)
-		
+				
 		var approach_dir = -incoming_velocity
 		if approach_dir.dot(front_face_normal) < 0:
 			front_face_normal = -front_face_normal

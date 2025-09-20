@@ -1,8 +1,10 @@
 extends CharacterBody2D
 
 @onready var player = get_parent().find_child("Player")
-@onready var sprite = $Sprite2D
+@onready var sprite = $FlipAxis/Pivot/Sprite2D
 @onready var progress_bar = $UI/ProgressBar
+@onready var flipAxis = $FlipAxis
+
 
 var direction : Vector2
 
@@ -21,12 +23,22 @@ func _process(_delta):
 	direction = player.position - position
 	
 	if direction.x < 0:
-		sprite.flip_h = true
+		flipAxis.scale.x = -1
+
+		
 	else:
-		sprite.flip_h = false
+		flipAxis.scale.x = 1
+
 		
 func _physics_process(delta):
 	velocity = direction.normalized() * 80
 	move_and_collide(velocity * delta)
 	
 	
+
+
+
+
+func _on_attack_hitboxes_body_entered(body: Node2D) -> void:
+	if (body is Player):
+		body._health -= 10

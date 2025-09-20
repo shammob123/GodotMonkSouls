@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://cu56ywwoqcnao"]
+
+[ext_resource type="Script" uid="uid://ctsv4ug31whn6" path="res://Eruption.gd" id="1_do3k5"]
+
+[sub_resource type="Curve" id="Curve_ebdy7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.982955, 0.123596), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_do3k5"]
+offsets = PackedFloat32Array(0.00666667, 1)
+colors = PackedColorArray(0.956185, 0.155712, 0.0268009, 1, 1.05888e-05, 0.739721, 0.928863, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6tukn"]
+size = Vector2(20, 91)
+
+[node name="EruptionArea" type="Area2D"]
+script = ExtResource("1_do3k5")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 200
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.8
+emission_shape = 1
+emission_sphere_radius = 13.93
+direction = Vector2(0, -1)
+spread = 10.0
+initial_velocity_min = 200.0
+initial_velocity_max = 600.0
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_ebdy7")
+color_ramp = SubResource("Gradient_do3k5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -43.5)
+shape = SubResource("RectangleShape2D_6tukn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

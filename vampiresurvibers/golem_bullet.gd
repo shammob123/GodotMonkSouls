@@ -17,4 +17,6 @@ func _physics_process(delta: float) -> void:
 	position += velocity * delta
 
 func _on_body_entered(body: Node2D) -> void:
-	queue_free()
+	if (body is Player):
+		body._health -= 10
+		queue_free()
